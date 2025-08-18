@@ -21,18 +21,19 @@ class ItemInputResponse(BaseModel):
 
 # Lista de itens em memória
 items = [
-    Item(id=1, nome="Teclado", preco=199.90),
-    Item(id=2, nome="Mouse", preco=89.90),
-    Item(id=3, nome="Monitor", preco=499.90),
-    Item(id=4, nome="Impressora", preco=299.90)
+    Item(id=1, nome="Notebook", preco=3500.00),
+    Item(id=2, nome="Mouse", preco=80.00),
+    Item(id=3, nome="Teclado", preco=150.00),
+    Item(id=4, nome="Monitor", preco=1200.00),
+    Item(id=5, nome="Impressora", preco=300.00),
 ]
 
-# LISTAR TODOS
+# Listar todos os produtos (GET)
 @app.get("/produtos", response_model=list[Item])
 def listar_produtos():
     return items
 
-# LISTAR POR ID
+# Listar produto por ID (GET)
 @app.get("/produtos/{item_id}", response_model=Item)
 def listar_produto_por_id(item_id: int):
     for item in items:
@@ -40,7 +41,7 @@ def listar_produto_por_id(item_id: int):
             return item
     raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-# CRIAR NOVO PRODUTO
+# Criar novo produto (POST)
 @app.post("/produtos", response_model=ItemInputResponse)
 def criar_produto(item: ItemInput):
     novo_id = max(item_existente.id for item_existente in items) + 1
@@ -48,7 +49,7 @@ def criar_produto(item: ItemInput):
     items.append(novo_item)
     return ItemInputResponse(message="Produto criado com sucesso", dados=novo_item)
 
-# ATUALIZAR PRODUTO
+# Atualizar produto (PUT)
 @app.put("/produtos/{item_id}", response_model=ItemInputResponse)
 def atualizar_produto(item_id: int, item_atualizado: ItemInput):
     for i, item in enumerate(items):
@@ -57,7 +58,7 @@ def atualizar_produto(item_id: int, item_atualizado: ItemInput):
             return ItemInputResponse(message="Produto atualizado com sucesso", dados=items[i])
     raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-# REMOVER PRODUTO
+# Remover produto (DELETE)
 @app.delete("/produtos/{item_id}")
 def remover_produto(item_id: int):
     for i, item in enumerate(items):
@@ -67,4 +68,8 @@ def remover_produto(item_id: int):
     raise HTTPException(status_code=404, detail="Produto não encontrado")
 
 # Rodar servidor:
-# uvicorn crud_completo:app --reload
+# uvicorn aula4_crud_completo:app --reload
+
+# Acesse a documentação da API em http://localhost:8000/docs
+
+

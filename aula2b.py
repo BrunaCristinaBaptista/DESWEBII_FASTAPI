@@ -25,12 +25,12 @@ class ItemInputResponse(BaseModel):
 
 # Lista de itens em memória
 items = [
-    Item(id=1, nome="Teclado", preco=199.90),
-    Item(id=2, nome="Mouse", preco=89.90),
-    Item(id=3, nome="Monitor", preco=499.90),
-    Item(id=4, nome="Impressora", preco=299.90),
+    Item(id=1, nome="Notebook", preco=3500.00),
+    Item(id=2, nome="Mouse", preco=80.00),
+    Item(id=3, nome="Teclado", preco=150.00),
+    Item(id=4, nome="Monitor", preco=1200.00),
+    Item(id=5, nome="Impressora", preco=300.00),
 ]
-
 
 # Rota GET
 @app.get("/produtos", response_model=list[Item])
