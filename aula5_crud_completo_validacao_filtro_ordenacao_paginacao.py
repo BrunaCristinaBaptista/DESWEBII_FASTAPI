@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 
 app = FastAPI()
 
+
 # Modelo para itens
 class Item(BaseModel):
     id: int
@@ -42,12 +43,20 @@ def listar_produtos(
     ordenar_por: str = "id",
     ordem: str = "asc",
 ):
+
+    # Carregar todos os produtos
     resultado = items
+
+    # Aplicar filtros
     if min_preco is not None:
         resultado = [item for item in resultado if item.preco >= min_preco]
     if max_preco is not None:
         resultado = [item for item in resultado if item.preco <= max_preco]
+
+    # Aplicar ordenação
     resultado.sort(key=lambda x: getattr(x, ordenar_por), reverse=(ordem == "desc"))
+
+    # Aplicar paginação
     return resultado[pagina * por_pagina : (pagina + 1) * por_pagina]
 
 
