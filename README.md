@@ -5,8 +5,8 @@ Para baixar e rodar os exemplos de FastAPI, siga os passos abaixo:
 
 1. **Clone o repositório**:
    ```bash
-   git clone fastapi-bsi4-2025-2
-   cd fastapi-bsi4-2025-2
+   git clone https://github.com/marrcandre/fastapi-bsi4.git
+   cd fastapi-bsi4
    ```
 
 2. **Crie um ambiente virtual**:
