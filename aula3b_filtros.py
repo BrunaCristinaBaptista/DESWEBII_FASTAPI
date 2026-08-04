@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Query
 from typing import Optional
+
+from fastapi import FastAPI, Query
 
 app = FastAPI()
 
