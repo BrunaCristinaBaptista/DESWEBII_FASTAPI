@@ -15,10 +15,16 @@ Este projeto reúne exemplos usados nas aulas para demonstrar a construção de 
 
    ```bash
    git clone https://github.com/marrcandre/fastapi-bsi4.git
-   cd fastapi-bsi4
    ```
 
-2. Crie e ative um ambiente virtual:
+2. Entre na pasta do projeto:
+
+```bash
+cd fastapi-bsi4
+```
+
+
+3. Crie e ative um ambiente virtual:
 
    ```bash
    python -m venv .venv
@@ -30,8 +36,13 @@ Este projeto reúne exemplos usados nas aulas para demonstrar a construção de 
    ```bash
    .venv\Scripts\activate
    ```
+5. Atualize o pip:
 
-3. Instale as dependências:
+   ```bash
+   pip install --upgrade pip
+   ```
+
+6. Instale as dependências:
 
    ```bash
    pip install -r requirements.txt
