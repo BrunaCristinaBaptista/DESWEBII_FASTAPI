@@ -42,7 +42,7 @@ def validar_produto(nome, preco):
 
     return erros
 
-
+# Aula 11 — Persistência em arquivo JSON.
 def carregar_produtos():
     try:
         with open(ARQUIVO_JSON, "r", encoding="utf-8") as arquivo:
@@ -64,12 +64,13 @@ def carregar_produtos():
     return dados
 
 
+# Aula 11 — Persistência em arquivo JSON.
 def salvar_produtos(lista):
     with open(ARQUIVO_JSON, "w", encoding="utf-8") as arquivo:
         json.dump(lista, arquivo, indent=2, ensure_ascii=False)
 
 
-# Carrega os dados no início (aula 11)
+# Carrega os dados no início (Aula 11)
 produtos = carregar_produtos()
 
 
@@ -145,7 +146,7 @@ def criar_produto(produto: ProdutoInput):
     novo_id = max([item["id"] for item in produtos], default=0) + 1
     novo_produto = {"id": novo_id, "nome": nome_limpo, "preco": produto.preco}
     produtos.append(novo_produto)
-    salvar_produtos(produtos)  # persiste após POST
+    salvar_produtos(produtos)  # persiste após POST (Aula 11)
     return novo_produto
 
 
@@ -158,7 +159,7 @@ def atualizar_produto(id: int, produto: ProdutoInput):
             if erros:
                 raise HTTPException(status_code=400, detail=erros)
             produtos[index] = {"id": id, "nome": nome_limpo, "preco": produto.preco}
-            salvar_produtos(produtos)  # persiste após PUT
+            salvar_produtos(produtos)  # persiste após PUT (Aula 11)
             return produtos[index]
     raise HTTPException(status_code=404, detail="Produto não encontrado.")
 
@@ -168,7 +169,7 @@ def remover_produto(id: int):
     for index, item in enumerate(produtos):
         if item["id"] == id:
             produtos.pop(index)
-            salvar_produtos(produtos)  # persiste após DELETE
+            salvar_produtos(produtos)  # persiste após DELETE (Aula 11)
             return
     raise HTTPException(status_code=404, detail="Produto não encontrado.")
 

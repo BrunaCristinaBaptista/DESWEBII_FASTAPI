@@ -298,5 +298,15 @@
     "id": 60,
     "nome": "Cadeira de Escritório",
     "preco": 699.9
+  },
+  {
+    "id": 62,
+    "nome": "Robo Aspirador Xiaomi",
+    "preco": 3999.99
+  },
+  {
+    "id": 63,
+    "nome": "Robo Aspirador Roborock",
+    "preco": 7999.99
   }
 ]
