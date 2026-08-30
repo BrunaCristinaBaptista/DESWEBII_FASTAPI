@@ -1,17 +1,18 @@
 import json
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
 
-ARQUIVO_JSON = "produtos_aula14.json"
+ARQUIVO_JSON = "produtos_14.json"
 
-# Aula 14 - Exercício 1 - Adicionar Marca no Produto
+# Aula 14 — Adicionando campo Marca
+
 
 class ProdutoInput(BaseModel):
     nome: str | None = None
     preco: float | None = None
+    marca: str | None = None
 
 
 class RespostaPaginada(BaseModel):
@@ -21,7 +22,7 @@ class RespostaPaginada(BaseModel):
     results: list[dict]
 
 
-def validar_produto(nome, preco):
+def validar_produto(nome, preco, marca):
     erros = {}
 
     if nome is None:
@@ -43,6 +44,18 @@ def validar_produto(nome, preco):
         erros["preco"] = "O preço deve ser maior que zero."
     elif round(preco, 2) != preco:
         erros["preco"] = "O campo deve ter no máximo 2 casas decimais."
+
+    # Validação de marca
+    if marca is None:
+        erros["marca"] = "O campo é obrigatório."
+    elif not isinstance(marca, str):
+        erros["marca"] = "O campo deve ser uma string."
+    else:
+        marca_limpa = marca.strip()
+        if marca_limpa == "":
+            erros["marca"] = "O campo não pode ser vazio."
+        elif len(marca_limpa) < 2 or len(marca_limpa) > 50:
+            erros["marca"] = "A marca deve possuir entre 2 e 50 caracteres."
 
     return erros
 
@@ -78,6 +91,7 @@ produtos = carregar_produtos()
 
 @app.get("/api/produtos/", response_model=RespostaPaginada)
 def listar_produtos(
+    marca: str | None = None,
     preco_minimo: str | None = None,
     preco_maximo: str | None = None,
     search: str | None = None,
@@ -116,7 +130,7 @@ def listar_produtos(
         except ValueError:
             erros["preco_maximo"] = "O valor deve ser numérico."
 
-    campos_ordenacao = ["nome", "preco"]
+    campos_ordenacao = ["nome", "preco", "marca"]
     campo_ordenacao = None
     ordem_desc = False
     if ordering is not None:
@@ -131,6 +145,10 @@ def listar_produtos(
 
     resultado = produtos
 
+    if marca is not None and marca != "":
+        termo_marca = marca.lower()
+        resultado = [p for p in resultado if p.get("marca", "").lower() == termo_marca]
+    
     if preco_minimo is not None:
         resultado = [p for p in resultado if p["preco"] >= preco_minimo]
     if preco_maximo is not None:
@@ -138,10 +156,15 @@ def listar_produtos(
 
     if search is not None:
         termo = search.lower()
-        resultado = [p for p in resultado if termo in p["nome"].lower()]
+        resultado = [
+            p for p in resultado
+            if termo in p["nome"].lower() or (p.get("marca") and termo in p["marca"].lower())
+    ]
 
     if campo_ordenacao == "preco":
         resultado.sort(key=lambda p: p["preco"], reverse=ordem_desc)
+    elif campo_ordenacao == "marca":
+        resultado.sort(key=lambda p: p.get("marca", "").lower(), reverse=ordem_desc)
     elif campo_ordenacao == "nome":
         resultado.sort(key=lambda p: p["nome"].lower(), reverse=ordem_desc)
 
@@ -169,12 +192,13 @@ def buscar_produto_por_id(id: int):
 @app.post("/api/produtos/", status_code=201)
 def criar_produto(produto: ProdutoInput):
     nome_limpo = produto.nome.strip() if produto.nome is not None else None
-    erros = validar_produto(nome_limpo, produto.preco)
+    marca_limpa = produto.marca.strip() if produto.marca is not None else None
+    erros = validar_produto(nome_limpo, produto.preco, marca_limpa)
     if erros:
         raise HTTPException(status_code=400, detail=erros)
 
     novo_id = max([item["id"] for item in produtos], default=0) + 1
-    novo_produto = {"id": novo_id, "nome": nome_limpo, "preco": produto.preco}
+    novo_produto = {"id": novo_id, "nome": nome_limpo, "preco": produto.preco, "marca": marca_limpa}
     produtos.append(novo_produto)
     salvar_produtos(produtos)
     return novo_produto
@@ -185,10 +209,11 @@ def atualizar_produto(id: int, produto: ProdutoInput):
     for index, item in enumerate(produtos):
         if item["id"] == id:
             nome_limpo = produto.nome.strip() if produto.nome is not None else None
-            erros = validar_produto(nome_limpo, produto.preco)
+            marca_limpa = produto.marca.strip() if produto.marca is not None else None
+            erros = validar_produto(nome_limpo, produto.preco, marca_limpa)
             if erros:
                 raise HTTPException(status_code=400, detail=erros)
-            produtos[index] = {"id": id, "nome": nome_limpo, "preco": produto.preco}
+            produtos[index] = {"id": id, "nome": nome_limpo, "preco": produto.preco, "marca": marca_limpa}
             salvar_produtos(produtos)
             return produtos[index]
     raise HTTPException(status_code=404, detail="Produto não encontrado.")
@@ -205,5 +230,5 @@ def remover_produto(id: int):
 
 
 # Rodar servidor:
-# uvicorn aula14:app --reload
+# uvicorn aula14_adicionando_marca:app --reload
 # Acesse a documentação em http://localhost:8000/docs
