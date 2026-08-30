@@ -439,21 +439,5 @@
     "preco": 250.0,
     "marca": "Keychron",
     "estoque": 0
-  },
-  {
-    "id": 64,
-    "nome": "Monitor Pro 4K",
-    "preco": 2800.0,
-    "marca": "LG",
-    "estoque": 8,
-    "descricao": "Painel IPS com HDR e conexões USB-C"
-  },
-  {
-    "id": 65,
-    "nome": "Cabo HDMI",
-    "preco": 35.0,
-    "marca": "Ugreen",
-    "estoque": 50,
-    "descricao": ""
   }
 ]

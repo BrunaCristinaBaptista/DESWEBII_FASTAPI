@@ -137,3 +137,38 @@
             5. Combinar marca, preço e estoque
                 
                 [http://127.0.0.1:8000/api/produtos/?marca=Dell&preco_minimo=1000&estoque_minimo=1](http://127.0.0.1:8000/api/produtos/?marca=Dell&preco_minimo=1000&estoque_minimo=1)
+
+- uvicorn aula16_adicionando_descrição:app --reload
+    - POST
+        1. Criar produto completo - Já criado
+            
+            [http://127.0.0.1:8000/api/produtos/64/](http://127.0.0.1:8000/api/produtos/64/)
+            
+        2. Criar produto sem descrição - Já criado
+            
+            [http://127.0.0.1:8000/api/produtos/65/](http://127.0.0.1:8000/api/produtos/65/)
+            
+        3. Descrição com mais de 500 chars
+            
+            Saída esperada: 400 Bad Request (`detail.descricao` acusa limite excedido)
+            
+            ```json
+            {"nome": "X", "preco": 10.0, "marca": "Y", "estoque": 1, "descricao": "texto muito longo..."}
+            ```
+            
+    - GET
+        1. Ordenar por descrição
+            
+            [http://127.0.0.1:8000/api/produtos/?ordering=descricao](http://127.0.0.1:8000/api/produtos/?ordering=descricao)
+            
+        2. Buscar termo presente na descrição
+            
+            [http://127.0.0.1:8000/api/produtos/?search=usb-c](http://127.0.0.1:8000/api/produtos/?search=usb-c)
+            
+        3. Buscar termo presente na marca
+            
+            [http://127.0.0.1:8000/api/produtos/?search=ugreen](http://127.0.0.1:8000/api/produtos/?search=ugreen)
+            
+        4. Buscar termo presente no nome
+            
+            [http://127.0.0.1:8000/api/produtos/?search=monitor](http://127.0.0.1:8000/api/produtos/?search=monitor)
